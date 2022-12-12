@@ -10,11 +10,11 @@ use {
 #[derive(Clone, Debug, Parser)]
 #[command(name = "route53-ip-update", author, version, about, long_about = None)]
 pub(crate) struct Args {
-    /// Whether to use IPv4, IPv6, or both.
+    /// Whether to use IPv4, IPv6, or both. If unspecified on the command-line and config file, defaults to both.
     #[arg(short = 'a', long = "address-type")]
     pub(crate) address_type: Option<QueryAddressType>,
 
-    /// Whether non-routable addresses should be allowed to be used.
+    /// Whether non-routable addresses should be allowed to be used. If unspecified on the command-line and config file, defaults to false.
     #[arg(short = 'n', long = "allow-nonroutable")]
     pub(crate) allow_nonroutable: Option<bool>,
 
@@ -22,31 +22,35 @@ pub(crate) struct Args {
     #[arg(short = 'c', long = "config-file")]
     pub config_file: Option<String>,
 
-    /// Whether interfaces should be queried for their addresses.
+    /// Whether interfaces should be queried for their addresses. If unspecified on the command-line and config file, defaults to false.
     #[arg(short = 'q', long = "query-interfaces")]
     pub(crate) query_interfaces: Option<bool>,
+
+    /// Whether the IP service should be queried for the current IP address. If unspecified on the command-line and config file, defaults to true.
+    #[arg(short = 'Q', long = "query-ip-service")]
+    pub(crate) query_ip_service: Option<bool>,
 
     /// Interfaces to ignore while querying.
     #[arg(short = 'I', long = "ignore-interfaces", action = ArgAction::Append)]
     pub(crate) ignore_interfaces: Vec<String>,
 
-    /// The service to query for the current IP address. To disable, set this to the empty string.
+    /// The service to query for the current IP address. If unspecified on the command-line and config file, defaults to https://api64.ipify.org.
     #[arg(short = 's', long = "ip-service")]
     pub(crate) ip_service: Option<String>,
 
-    /// The timeout to allow for the IP service to respond.
+    /// The timeout to allow for the IP service to respond. If unspecified on the command-line and config file, defaults to 10 seconds. This may be specified as a duration with units, e.g. 10s, 1m, etc.
     #[arg(short = 't', long = "timeout")]
     pub(crate) timeout: Option<Duration>,
 
-    /// The time-to-live to apply to new records.
+    /// The time-to-live to apply to new records, in seconds.
     #[arg(short = 'T', long = "ttl")]
     pub(crate) ttl: Option<Ttl>,
 
-    /// The Route 53 zone to update.
+    /// The Route 53 zone to update. If you need to update more than one Route 53 zone, use the config file.
     #[arg(short = 'r', long = "route53-zone")]
     pub(crate) route53_zone: Option<String>,
 
-    /// The hostnames to update.
+    /// The hostnames to update in the Route 53 zone.
     pub(crate) hostnames: Vec<String>,
 }
 

@@ -97,6 +97,10 @@ impl Config {
             self.query_interfaces = query_interfaces;
         }
 
+        if let Some(query_ip_service) = args.query_ip_service {
+            self.query_ip_service = query_ip_service;
+        }
+
         match self.ignore_interfaces {
             None => self.ignore_interfaces = Some(args.ignore_interfaces.clone()),
             Some(ref mut interfaces) => interfaces.extend(args.ignore_interfaces.iter().cloned()),
