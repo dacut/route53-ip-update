@@ -27,17 +27,6 @@ use {
 
 const USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"));
 
-#[derive(Clone, Copy, Debug)]
-pub(crate) struct NoLocalAddressFound;
-
-impl Display for NoLocalAddressFound {
-    fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
-        write!(f, "No suitable local address found")
-    }
-}
-
-impl Error for NoLocalAddressFound {}
-
 pub(crate) async fn get_address_from_ip_service(
     ip_service: &str,
     timeout: Duration,
