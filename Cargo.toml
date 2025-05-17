@@ -11,7 +11,7 @@ aws-config = "0.51.0"
 aws-sdk-route53 = "0.21.0"
 clap = { version = "4.0.29", features = ["color", "derive", "error-context", "help", "std", "suggestions", "unicode", "usage", "wrap_help"] }
 env_logger = "0.11.8"
-futures = "0.3.25"
+futures = "0.3.31"
 hickory-resolver = "0.25.2"
 humantime = "2.1.0"
 humantime-serde = "1.1.1"
