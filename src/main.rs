@@ -16,13 +16,13 @@ use {
     aws_sdk_route53::Client as Route53Client,
     clap::Parser,
     futures::stream::{futures_unordered::FuturesUnordered, StreamExt},
+    hickory_resolver::config::LookupIpStrategy,
     log::info,
     query_address_type::QueryAddressType,
     query_interfaces::get_addresses_from_network_interfaces,
     query_ip_service::get_address_from_ip_service,
     std::{collections::HashSet, future::Future, net::IpAddr, pin::Pin, process::ExitCode},
     tower::BoxError,
-    hickory_resolver::config::LookupIpStrategy,
     update::update_zone,
 };
 

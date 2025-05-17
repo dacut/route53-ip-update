@@ -1,6 +1,9 @@
 use {
     crate::error::Route53IpUpdateError,
-    serde::{Deserialize, Deserializer, Serialize, Serializer, de::{self, Visitor, Unexpected}},
+    serde::{
+        de::{self, Unexpected, Visitor},
+        Deserialize, Deserializer, Serialize, Serializer,
+    },
     std::{
         fmt::{Display, Formatter, Result as FmtResult},
         str::FromStr,

@@ -1,14 +1,15 @@
 use {
     hickory_resolver::{
         config::{LookupIpStrategy, ResolverConfig, ResolverOpts},
+        error::ResolveError,
         name_server::TokioConnectionProvider,
         system_conf::read_system_conf,
-        ResolveError, TokioResolver,
+        AsyncResolver,
     },
     log::debug,
     once_cell::sync::Lazy,
     reqwest::{
-        dns::{Addrs, Resolve, Resolving, Name},
+        dns::{Addrs, Name, Resolve, Resolving},
         Client,
     },
     std::{
@@ -22,6 +23,8 @@ use {
 };
 
 const USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"));
+
+type TokioResolver = AsyncResolver<TokioConnectionProvider>;
 
 pub(crate) async fn get_address_from_ip_service(
     ip_service: &str,
@@ -51,8 +54,7 @@ impl QueryResolver {
     fn new(lookup_ip_strategy: LookupIpStrategy) -> Result<Self, BoxError> {
         let (config, mut opts) = get_global_resolve_config()?;
         opts.ip_strategy = lookup_ip_strategy;
-        let resolver =
-            TokioResolver::builder_with_config(config, TokioConnectionProvider::default()).with_options(opts).build();
+        let resolver = TokioResolver::tokio(config, opts);
 
         Ok(Self {
             wrapped: resolver,
