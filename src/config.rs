@@ -4,7 +4,7 @@ use {
     std::{net::IpAddr, time::Duration},
 };
 
-const DEFAULT_IP_SERVICE: &str = "https://api64.ipify.org";
+const DEFAULT_IP_SERVICE: &str = "https://ipinfo.kanga.org/";
 
 #[derive(Debug, Default, Deserialize, Clone, Serialize)]
 #[serde(rename_all = "kebab-case")]
