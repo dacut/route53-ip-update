@@ -71,7 +71,8 @@ impl Args {
                 "toml" => {
                     let mut file_contents = Vec::new();
                     copy(&mut file, &mut file_contents).await?;
-                    toml::from_slice::<Config>(&file_contents)?
+                    let file_contents_str = str::from_utf8(&file_contents)?;
+                    toml::from_str::<Config>(file_contents_str)?
                 }
                 "json" | "yaml" | "yml" => {
                     let mut file_contents = Vec::new();
