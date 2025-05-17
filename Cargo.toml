@@ -23,6 +23,6 @@ serde = { version = "1.0.149", features = ["derive"] }
 serde_yaml = "0.9"
 tokio = { version = "1.45.0", features = ["macros", "rt-multi-thread"] }
 toml = "0.5.9"
-tower = "0.4.13"
+tower = "0.5.2"
 trust-dns-proto = "0.22.0"
 trust-dns-resolver = "0.22.0"

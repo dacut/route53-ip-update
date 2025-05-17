@@ -116,7 +116,7 @@ dependencies = [
  "ring 0.16.20",
  "time",
  "tokio",
- "tower",
+ "tower 0.4.13",
  "tracing",
  "zeroize",
 ]
@@ -172,7 +172,7 @@ dependencies = [
  "bytes",
  "http",
  "tokio-stream",
- "tower",
+ "tower 0.4.13",
 ]
 
 [[package]]
@@ -194,7 +194,7 @@ dependencies = [
  "bytes",
  "http",
  "tokio-stream",
- "tower",
+ "tower 0.4.13",
 ]
 
 [[package]]
@@ -216,7 +216,7 @@ dependencies = [
  "aws-types",
  "bytes",
  "http",
- "tower",
+ "tower 0.4.13",
 ]
 
 [[package]]
@@ -281,7 +281,7 @@ dependencies = [
  "lazy_static",
  "pin-project-lite",
  "tokio",
- "tower",
+ "tower 0.4.13",
  "tracing",
 ]
 
@@ -318,7 +318,7 @@ dependencies = [
  "http",
  "http-body",
  "pin-project-lite",
- "tower",
+ "tower 0.4.13",
  "tracing",
 ]
 
@@ -1657,7 +1657,7 @@ dependencies = [
  "serde_yaml",
  "tokio",
  "toml",
- "tower",
+ "tower 0.5.2",
  "trust-dns-proto",
  "trust-dns-resolver",
 ]
@@ -2189,6 +2189,16 @@ dependencies = [
  "tower-layer",
  "tower-service",
  "tracing",
+]
+
+[[package]]
+name = "tower"
+version = "0.5.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d039ad9159c98b70ecfd540b2573b97f7f52c3e8d9f8ad57a24b916a536975f9"
+dependencies = [
+ "tower-layer",
+ "tower-service",
 ]
 
 [[package]]
