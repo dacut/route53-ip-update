@@ -2,7 +2,7 @@
 name = "route53-ip-update"
 authors = ["David Cuthbert <dacut@kanga.org>"]
 description = "Update a Route 53 DNS record with your public IPv4 and/or IPv6 address"
-version = "0.1.0"
+version = "0.1.1"
 license = "Apache-2.0"
 edition = "2021"
 
