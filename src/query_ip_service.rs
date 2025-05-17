@@ -6,7 +6,7 @@ use {
         system_conf::read_system_conf,
         AsyncResolver,
     },
-    log::debug,
+    log::info,
     once_cell::sync::Lazy,
     reqwest::{
         dns::{Addrs, Name, Resolve, Resolving},
@@ -35,7 +35,7 @@ pub(crate) async fn get_address_from_ip_service(
     let resolver = Arc::new(QueryResolver::new(lookup_ip_strategy)?);
     let client = Client::builder().dns_resolver(resolver).timeout(timeout).user_agent(USER_AGENT).build()?;
 
-    debug!("Querying IP service at {ip_service} using strategy {lookup_ip_strategy:?}");
+    info!("Querying IP service at {ip_service} using strategy {lookup_ip_strategy:?}");
 
     let response = client.get(ip_service.to_string()).send().await?.error_for_status()?;
     let text = response.text().await?;

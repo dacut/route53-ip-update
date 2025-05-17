@@ -119,8 +119,8 @@ async fn main() -> ExitCode {
         ipv6_address_strings.push(address.to_string());
     }
 
-    info!("IPv4 addresses: {}", ipv4_address_strings.join(", "));
-    info!("IPv6 addresses: {}", ipv6_address_strings.join(", "));
+    info!("IPv4 addresses found: {}", ipv4_address_strings.join(", "));
+    info!("IPv6 addresses found: {}", ipv6_address_strings.join(", "));
 
     let sdk_config = load_aws_config_from_env().await;
     let route53 = Route53Client::new(&sdk_config);
