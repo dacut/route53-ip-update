@@ -1,28 +1,24 @@
 use {
-    hyper::client::connect::dns::Name,
+    hickory_resolver::{
+        config::{LookupIpStrategy, ResolverConfig, ResolverOpts},
+        name_server::TokioConnectionProvider,
+        system_conf::read_system_conf,
+        ResolveError, TokioResolver,
+    },
     log::debug,
     once_cell::sync::Lazy,
     reqwest::{
-        dns::{Addrs, Resolve, Resolving},
+        dns::{Addrs, Resolve, Resolving, Name},
         Client,
     },
     std::{
         error::Error,
         fmt::{Display, Formatter, Result as FmtResult},
-        io::Error as IoError,
         net::{IpAddr, SocketAddr},
         sync::{Arc, Mutex},
         time::Duration,
     },
     tower::BoxError,
-    trust_dns_proto::xfer::dns_handle::DnsHandle,
-    trust_dns_resolver::{
-        config::{LookupIpStrategy, ResolverConfig, ResolverOpts},
-        error::ResolveError,
-        name_server::{ConnectionProvider, GenericConnection, GenericConnectionProvider, TokioRuntime},
-        system_conf::read_system_conf,
-        AsyncResolver,
-    },
 };
 
 const USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"));
@@ -48,14 +44,15 @@ pub(crate) async fn get_address_from_ip_service(
 }
 
 struct QueryResolver {
-    wrapped: AsyncResolver<GenericConnection, GenericConnectionProvider<TokioRuntime>>,
+    wrapped: TokioResolver,
 }
 
 impl QueryResolver {
     fn new(lookup_ip_strategy: LookupIpStrategy) -> Result<Self, BoxError> {
         let (config, mut opts) = get_global_resolve_config()?;
         opts.ip_strategy = lookup_ip_strategy;
-        let resolver = AsyncResolver::tokio(config, opts)?;
+        let resolver =
+            TokioResolver::builder_with_config(config, TokioConnectionProvider::default()).with_options(opts).build();
 
         Ok(Self {
             wrapped: resolver,
@@ -70,11 +67,7 @@ impl Resolve for QueryResolver {
     }
 }
 
-async fn resolve_name<C, P>(resolver: AsyncResolver<C, P>, name: Name) -> Result<Addrs, BoxError>
-where
-    C: DnsHandle<Error = ResolveError>,
-    P: ConnectionProvider<Conn = C>,
-{
+async fn resolve_name(resolver: TokioResolver, name: Name) -> Result<Addrs, BoxError> {
     let addrs = resolver.lookup_ip(name.as_str()).await?;
     let mut result = Vec::new();
     for addr in addrs.iter() {
@@ -95,8 +88,8 @@ impl Display for ResolveConfigNotAvailable {
 
 impl Error for ResolveConfigNotAvailable {}
 
-impl From<&IoError> for ResolveConfigNotAvailable {
-    fn from(error: &IoError) -> Self {
+impl From<&ResolveError> for ResolveConfigNotAvailable {
+    fn from(error: &ResolveError) -> Self {
         Self(error.to_string())
     }
 }
@@ -105,10 +98,10 @@ fn get_global_resolve_config() -> Result<(ResolverConfig, ResolverOpts), Resolve
     let m = RESOLVE_CONFIG.lock().unwrap();
 
     match (*m).as_ref() {
-        Ok((config, opts)) => Ok((config.clone(), *opts)),
+        Ok((config, opts)) => Ok((config.clone(), opts.clone())),
         Err(e) => Err(e.into()),
     }
 }
 
-static RESOLVE_CONFIG: Lazy<Mutex<Result<(ResolverConfig, ResolverOpts), IoError>>> =
+static RESOLVE_CONFIG: Lazy<Mutex<Result<(ResolverConfig, ResolverOpts), ResolveError>>> =
     Lazy::new(|| Mutex::new(read_system_conf()));
