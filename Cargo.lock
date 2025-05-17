@@ -2034,7 +2034,7 @@ dependencies = [
  "hickory-resolver 0.25.2",
  "humantime",
  "humantime-serde",
- "hyper 0.14.32",
+ "hyper 1.6.0",
  "log",
  "network-interface",
  "once_cell",
