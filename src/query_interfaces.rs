@@ -11,7 +11,7 @@ pub(crate) async fn get_addresses_from_network_interfaces(config: &Config) -> Re
     let interfaces = NetworkInterface::show()?;
     for interface in interfaces {
         if config.allows_interface(&interface.name) {
-            if let Some(addr) = interface.addr {
+            for addr in interface.addr {
                 let addr = match addr {
                     Addr::V4(addr) => IpAddr::V4(addr.ip),
                     Addr::V6(addr) => IpAddr::V6(addr.ip),
